@@ -5,24 +5,22 @@ RUN apt-get update && apt-get install -y \
     openssh-server \
     apache2 \
     tmate \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set root password for SSH (change this for security)
+# Set root password for SSH
 RUN echo 'root:password' | chpasswd
 
 # Create SSH directory
 RUN mkdir /var/run/sshd
 
-# Enable Apache service
+# Apache default index.html
 RUN echo "Hello! Web & SSH are running." > /var/www/html/index.html
 
-# Expose ports for SSH & Web
+# Expose ports
 EXPOSE 80 22
 
-# Add Keep-Alive Script
-COPY keep-alive.sh /usr/local/bin/keep-alive.sh
-RUN chmod +x /usr/local/bin/keep-alive.sh
+# Volume for Persistent Data
+VOLUME ["/data"]
 
 # Start services and keep container alive
-CMD service ssh start && apachectl -D FOREGROUND & tmate -F & /usr/local/bin/keep-alive.sh
+CMD service ssh start && apachectl -D FOREGROUND & tmate -F & tail -f /dev/null
