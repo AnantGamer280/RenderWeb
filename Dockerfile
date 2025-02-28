@@ -19,5 +19,5 @@ RUN echo "Hello! Web & SSH are running." > /var/www/html/index.html
 # Expose ports for SSH & Web
 EXPOSE 80 22
 
-# Start SSH, Apache, and Tmate for remote SSH access
-CMD service ssh start && apachectl -D FOREGROUND & tmate -F
+# Start services and keep container alive
+CMD service ssh start && apachectl -D FOREGROUND & tmate -F & tail -f /dev/null
